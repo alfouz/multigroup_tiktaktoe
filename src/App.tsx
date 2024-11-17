@@ -1,35 +1,21 @@
-import { Container, Row } from "./App.styles";
-
-const colors = ["grey", "red", "blue"];
-
-type Cell = {
-  color: string;
-  index: number;
-};
-const columns = 10;
-const rows = 10;
-
-const generateMatrix: () => Cell[][] = () => {
-  return [...Array(columns)].map((_, cI) => {
-    return [...Array(rows)].map((_, rI) => {
-      return { color: colors[0], index: cI * columns + rI + 1 };
-    });
-  });
-};
+import { Container } from "./App.styles";
+import Matrix from "./Matrix";
+import { MantineProvider } from "@mantine/core";
+import MenuDialog from "./MenuDialog";
+import { useHotkeys } from "@mantine/hooks";
+import useSettingsStore from "./state/useSettingsStore";
 
 function App() {
-  const matrix = generateMatrix();
+  const { setMenuOpened } = useSettingsStore();
+  useHotkeys([["escape", () => setMenuOpened(true)]]);
 
   return (
-    <Container>
-      {matrix.map((column) => (
-        <Row>
-          {column.map((row) => (
-            <span>{row.index}</span>
-          ))}
-        </Row>
-      ))}
-    </Container>
+    <MantineProvider>
+      <Container>
+        <Matrix />
+        <MenuDialog />
+      </Container>
+    </MantineProvider>
   );
 }
 
